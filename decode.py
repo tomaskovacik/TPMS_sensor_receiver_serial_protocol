@@ -4,6 +4,7 @@ import os
 import serial
 import string
 import time
+import datetime
 
 global ser 
 ser = None 
@@ -28,6 +29,7 @@ try:
 		try:
 			a = ser.read()
 			if a == chr(0x55):
+				current_time=str(datetime.datetime.now())
 				b = ser.read()
 	                        cmd = ser.read()
 	                        tireID = ser.read()
@@ -54,13 +56,13 @@ try:
 								tire = "spare"
 								#print ("spare tire")
 							if (state & 0b00010000) != 0:
-								print ("Lost signal of "+tire+" tire!")
+								print (current_time+" Lost signal of "+tire+" tire!")
 							elif (state & 0b00001000) != 0:
-								print (tire+" tire leaking! "+str(float(ord(pressure) * 3.44))+"kPa / "+str(ord(temperature) - 50)+"°C")
+								print (current_time+" "+tire+" tire leaking! "+str(float(ord(pressure) * 3.44))+"kPa / "+str(ord(temperature) - 50)+"°C")
 							elif (state & 0b00010000) != 0:
-								print ("Low battery at "+tire+"! "+str(float(ord(pressure) * 3.44))+"kPa / "+str(ord(temperature) - 50)+"°C")
+								print (current_time+" Low battery at "+tire+"! "+str(float(ord(pressure) * 3.44))+"kPa / "+str(ord(temperature) - 50)+"°C")
 							else:
-								print(tire+" tire: "+str(float(ord(pressure) * 3.44))+"kPa / "+str(ord(temperature) - 50)+"°C")
+								print(current_time+" "+tire+" tire: "+str(float(ord(pressure) * 3.44))+"kPa / "+str(ord(temperature) - 50)+"°C")
 
 		except (serial.SerialException, serial.SerialTimeoutException):
 			print "serial port unavailable, reconnecting..."
