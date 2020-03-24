@@ -59,10 +59,10 @@ CRC = [0]XOR[1]XOR[2]XOR[3]XOR[4]XOR[5]XOR[6]
 
  reposnce:
 ```
-55 AA 09 01 99 D1 12 7C D1 left front sensor : 99D1127C
-55 AA 09 02 99 CB 2C 4E C4 right front sensor: 99CB2C4E
-55 AA 09 03 99 CB 5B 49 B5 left rear sensor  : 99CB5B49
-55 AA 09 04 99 CB C5 3A 5F right rear sensor : 99CBC53A 
+55 AA 09 01 99 D1 12 7C D1 left front sensor : 99D1127C //66 2e ed 83
+55 AA 09 02 99 CB 2C 4E C4 right front sensor: 99CB2C4E //66 34 d3 b1
+55 AA 09 03 99 CB 5B 49 B5 left rear sensor  : 99CB5B49 //66 34 a4 b6
+55 AA 09 04 99 CB C5 3A 5F right rear sensor : 99CBC53A //66 34 3a c5
 55 AA 09 05 00 00 00 05 F6 spare sensor      : none (all4 checked with app!)
 
 55 AA 09 01 99 D1 12 7C D1
