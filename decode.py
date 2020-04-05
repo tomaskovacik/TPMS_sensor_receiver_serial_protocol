@@ -55,7 +55,7 @@ try:
 							elif tireID == chr(0x05):
 								tire = "spare"
 								#print ("spare tire")
-							if (state & 0b00010000) != 0:
+							if (state & 0b00100000) != 0:
 								print (current_time+" Lost signal of "+tire+" tire!")
 							elif (state & 0b00001000) != 0:
 								print (current_time+" "+tire+" tire leaking! "+str(float(ord(pressure) * 3.44))+"kPa / "+str(ord(temperature) - 50)+"°C")
