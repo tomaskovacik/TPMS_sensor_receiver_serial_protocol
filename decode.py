@@ -41,19 +41,19 @@ try:
 						if cmd == chr(0x08):
 							#print ("sensor information")
 							if tireID == chr(0x00):
-								tire = "front left"
+								tire = "Front left"
 								#print ("front left")
 							elif tireID == chr(0x01):
 								tire = "Front right"
 								#print ("Front right tire")
 							elif tireID == chr(0x10):
-								tire = "left back"
+								tire = "Left back"
 								#print ("left back tire")
 							elif tireID == chr(0x11):
 								tire = "Rear right"
 								#print ("Rear Right tire")
 							elif tireID == chr(0x05):
-								tire = "spare"
+								tire = "Spare tire"
 								#print ("spare tire")
 							if (state & 0b00100000) != 0:
 								print (current_time+" Lost signal of "+tire+" tire!")
