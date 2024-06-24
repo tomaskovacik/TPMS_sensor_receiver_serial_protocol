@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding: UTF-8 -*-
 import os
 import serial
@@ -208,13 +208,12 @@ try:
     while(1):
         try:
             a = ser.read()
-            print(a)
-            if a == chr(0x55):
+            if a == (b'\x55'):
                 current_time=str(datetime.datetime.now())
                 b = ser.read()
-                if b == chr(0xAA):
+                if b == b'\xAA':
                     cmd = ser.read()
-                    if cmd == chr(0x08):
+                    if cmd == b'\x08':
                         tireID = ord(ser.read())
                         pressure = ord(ser.read())
                         temperature = ord(ser.read())
@@ -245,7 +244,7 @@ try:
                                 print (current_time+" Low battery at "+tire+"! "+str(float(pressure * 3.44))+"kPa / "+str(temperature - 50)+"°C")
                             else:
                                 print(current_time+" "+tire+" tire: "+str(float(pressure * 3.44))+"kPa / "+str(temperature - 50)+"°C")
-                        if cmd == chr(0x09):
+                        if cmd == b'\0x09':
                             tireID = ord(ser.read())
                             ID0 = ord(ser.read())
                             ID1 = ord(ser.read())
