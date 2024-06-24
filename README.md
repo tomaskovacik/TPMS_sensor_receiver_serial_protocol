@@ -1,10 +1,10 @@
 serial protocol analysis for this item:
-https://www.aliexpress.com/item/4000257413701.html
+https://www.aliexpress.com/item/4000257413701.html (broken link :( )
 also called TY05N
 
-probably also for, (but I did not teste it!):
-https://www.aliexpress.com/item/32867476692.html
-https://www.aliexpress.com/item/33009256344.html
+probably also for, (but I did not tested it!):
+https://www.aliexpress.com/item/32867476692.html (broken link :( )
+https://www.aliexpress.com/item/33009256344.html (broken link :( )
 
 ```
 [0] 55
