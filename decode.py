@@ -38,13 +38,13 @@ try:
     eventACK.append(0x00)
     eventACK.append(0x00)
 
-    eartbeat = bytearray()
-    eartbeat.append(0x55)
-    eartbeat.append(0xAA)
-    eartbeat.append(0x06)
-    eartbeat.append(0x19)
-    eartbeat.append(0x00)
-    eartbeat.append(0xE0)
+    heartbeat = bytearray()
+    heartbeat.append(0x55)
+    heartbeat.append(0xAA)
+    heartbeat.append(0x06)
+    heartbeat.append(0x19)
+    heartbeat.append(0x00)
+    heartbeat.append(0xE0)
 
 	#?? 0x55, 0xAA, 0x06, 0x5B, ??, 0xE0
 
@@ -207,6 +207,7 @@ try:
 	# read cmds from the radio and act like a cd changer
     while(1):
         try:
+            ser.write(querySensorID)
             a = ser.read()
             if a == (b'\x55'):
                 current_time=str(datetime.datetime.now())
@@ -220,68 +221,127 @@ try:
                         state = ord(ser.read())
                         crc = ord(ser.read())
                         if crc == ord(a)^ord(b)^ord(cmd)^tireID^pressure^temperature^state:
-                            #print ("sensor information")
                             if tireID == 0:
+                                print ("---------------------------------------------------------------------------------------")
                                 tire = "Front left"
-                                #print ("front left")
                             elif tireID == 0x01:
                                 tire = "Front right"
-                                #print ("Front right tire")
                             elif tireID == 0x10:
                                 tire = "Rear left"
-                                #print ("left back tire")
                             elif tireID == 0x11:
                                 tire = "Rear right"
-                                #print ("Rear Right tire")
                             elif tireID == 5:
                                 tire = "Spare"
-                                #print ("spare tire")
                             if (state & 0b00100000) != 0:
                                 print (current_time+" Lost signal of "+tire+" tire!")
                             elif (state & 0b00001000) != 0:
                                 print (current_time+" "+tire+" tire leaking! "+str(float(pressure * 3.44))+"kPa / "+str(temperature - 50)+"°C")
                             elif (state & 0b00010000) != 0:
                                 print (current_time+" Low battery at "+tire+"! "+str(float(pressure * 3.44))+"kPa / "+str(temperature - 50)+"°C")
+                            elif (state & 0b00000010) != 0:
+                                print (current_time+" High battery voltage?? at "+tire+"! "+str(float(pressure * 3.44))+"kPa / "+str(temperature - 50)+"°C")
+                            elif (state & 0b00000100) != 0:
+                                print (current_time+" High temperature at "+tire+"! "+str(float(pressure * 3.44))+"kPa / "+str(temperature - 50)+"°C")
                             else:
                                 print(current_time+" "+tire+" tire: "+str(float(pressure * 3.44))+"kPa / "+str(temperature - 50)+"°C")
-                        if cmd == b'\0x09':
-                            tireID = ord(ser.read())
-                            ID0 = ord(ser.read())
-                            ID1 = ord(ser.read())
-                            ID2 = ord(ser.read())
-                            ID3 = ord(ser.read())
-                            crc = ord(ser.read())
-                            if crc == ord(a)^ord(b)^ord(cmd)^tireID^ID0^ID1^ID2^ID3:
-                                #print tires ids:
-                                if tireID == 1:
-                                    text = "Front left"
-                                if tireID == 2:
-                                    text = "Front right"
-                                if tireID == 3:
-                                    text = "Rear left"
-                                if tireID == 4:
-                                    text = "Rear left"
-                                if tireID == 5:
-                                    text = "Spare"
-                                text = text+" id: "
-                                if ID0 < 0xF:
-                                    ID0 = '0' + '%x' % ID0
-                                else:
-                                    ID0 = '%x' % ID0
-                                if ID1 < 0xF:                                                          
-                                    ID1 = '0' + '%x' % ID1                                                  
-                                else:                                                           
-                                    ID1 = '%x' % ID1
-                                if ID2 < 0xF:
-                                    ID2 = '0' + '%x' % ID2
-                                else:
-                                    ID2 = '%x' % ID2
-                                if ID3 < 0xF:
-                                    ID3 = '0' +'%x' % ID3
-                                else:
-                                    ID3 = '%x' % ID3
-                                text += ID0 + ID1 + ID2 + ID3
-                                print (text)
+                            ser.write(eventACK)
+                    elif cmd == b'\x09':
+                        tireID = ord(ser.read())
+                        ID0 = ord(ser.read())
+                        ID1 = ord(ser.read())
+                        ID2 = ord(ser.read())
+                        ID3 = ord(ser.read())
+                        crc = ord(ser.read())
+                        if crc == ord(a)^ord(b)^ord(cmd)^tireID^ID0^ID1^ID2^ID3:
+                            #print tires ids:
+                            if tireID == 1:
+                                text = "Front left"
+                            if tireID == 2:
+                                text = "Front right"
+                            if tireID == 3:
+                                text = "Rear left"
+                            if tireID == 4:
+                                text = "Rear left"
+                            if tireID == 5:
+                                text = "Spare"
+                            text = text+" id: "
+                            if ID0 < 0xF:
+                                ID0 = '0' + '%x' % ID0
+                            else:
+                                ID0 = '%x' % ID0
+                            if ID1 < 0xF:
+                                ID1 = '0' + '%x' % ID1
+                            else:
+                                ID1 = '%x' % ID1
+                            if ID2 < 0xF:
+                                ID2 = '0' + '%x' % ID2
+                            else:
+                                ID2 = '%x' % ID2
+                            if ID3 < 0xF:
+                                ID3 = '0' +'%x' % ID3
+                            else:
+                                ID3 = '%x' % ID3
+                            text += ID0 + ID1 + ID2 + ID3
+                            print (text)
+                            ser.write(eventACK)
+                    elif cmd == b'\x06':
+                        subcmd=ser.read()
+                        if (subcmd == 0):
+                                ssubcmd=ser.read()
+                                print(ord(ssubcmd))
+                                if (ssubcmd == -120): #handshake?
+                                    ser.write(heartbeat)
+                        elif (ord(subcmd) == 24): #pairing
+                            tireID=ord(ser.read())
+                            if tireID == 0:
+                                tire = "Front left"
+                            elif tireID == 0x01:
+                                tire = "Front right"
+                            elif tireID == 0x10:
+                                tire = "Rear left"
+                            elif tireID == 0x11:
+                                tire = "Rear right"
+                            elif tireID == 5:
+                                tire = "Spare"
+                            text += " sensor pairing successfull"
+                            print(text)
+                            ser.write(eventACK)
+                        elif (ord(subcmd) == -75):
+                            #ack with time ?
+                            print(ord(ser.read())) ##changing in time
+                    elif cmd == b'\x07':
+                        subcmd=ser.read()
+                        if (ord(subcmd) == 48): #tire swap
+                            tireID1=ser.read()
+                            tireID2=ser.read()
+                            if tireID1 == 0:
+                                tire1 = "Front left"
+                            elif tireID1 == 0x01:
+                                tire1 = "Front right"
+                            elif tireID1 == 0x10:
+                                tire1 = "Rear left"
+                            elif tireID1 == 0x11:
+                                tire1 = "Rear right"
+                            elif tireID1 == 5:
+                                tire1 = "Spare"
+                            if tireID2 == 0:
+                                tire2 = "Front left"
+                            elif tireID2 == 0x01:
+                                tire2 = "Front right"
+                            elif tireID2 == 0x10:
+                                tire2 = "Rear left"
+                            elif tireID2 == 0x11:
+                                tire2 = "Rear right"
+                            elif tireID2 == 5:
+                                tire2 = "Spare"
+                            print ("exchange: ",tire1," for ",tire2)
+                    else:
+                        print("cmd: ",ord(cmd))
+                        packet_bytes=int.from_bytes(cmd,"big")
+                        packet_bytes=packet_bytes-3
+                        while packet_bytes>0:
+                            print(" "+ str(ser.read()))
+                            packet_bytes=packet_bytes-1
         except (serial.SerialException, serial.SerialTimeoutException):
             print ("serial port unavailable, reconnecting...")
             ser.close()
