@@ -261,7 +261,7 @@ try:
                             if tireID == 3:
                                 text = "Rear left"
                             if tireID == 4:
-                                text = "Rear left"
+                                text = "Rear right"
                             if tireID == 5:
                                 text = "Spare"
                             text = text+" id: "
