@@ -1,3 +1,6 @@
+based on top markings, receiver chip is CMT2218B from CMOSTECH
+http://www.cmostek.com/products/wireless/receivers/CMT2218B
+
 serial protocol analysis for this item:
 https://www.aliexpress.com/item/4000257413701.html (broken link :( )
 also called TY05N
